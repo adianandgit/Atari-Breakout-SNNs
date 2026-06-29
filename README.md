@@ -109,7 +109,7 @@ When $v(t) \ge v_{thresh}$, the neuron emits a binary spike and the potential re
 ### 1. Clone Repository
 
 ```bash
-git clone "https://github.com/vishesh-kumar-singh/Atari-Breakout-DoubleDQN.git"
+git clone "https://github.com/adianandgit/Atari-Breakout-SNNs.git"
 
 ```
 
