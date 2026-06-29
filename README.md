@@ -1,6 +1,6 @@
 # Neuromorphic Deep RL: Atari Breakout via SNNs & Rainbow DQN
 
-This project explores the integration of Spiking Neural Networks (SNNs) with advanced Deep Reinforcement Learning (RL). It implements a robust Deep Q-Network (DQN) agent to master the Atari Breakout environment, and subsequently converts this trained Artificial Neural Network (ANN) into an energy-efficient Spiking Neural Network (SNN).
+This project explores the integration of Spiking Neural Networks (SNNs) with advanced Deep Reinforcement Learning (RL). It implements a robust Deep Q-Network (DQN) agent to master the Atari Breakout environment, and subsequently converts this trained Artificial Neural Network (ANN) into an energy-efficient Spiking Neural Network (SNN). 
 
 By bridging state-of-the-art RL techniques with neuromorphic principles, this repository studies performance trade-offs, computational efficiency, and the robustness of replacing dense matrix operations with sparse, event-driven spike communications.
 
@@ -11,53 +11,23 @@ By bridging state-of-the-art RL techniques with neuromorphic principles, this re
 This agent builds upon Vanilla DQN by incorporating several components of the "Rainbow" DQN architecture, alongside a complete neuromorphic conversion pipeline.
 
 ### Deep Reinforcement Learning (ANN)
-
-* 
-**Double DQN (DDQN)**: Reduces the overestimation bias inherent in standard Q-learning by decoupling the action selection and evaluation steps.
-
-
-* 
-**Prioritized Experience Replay (PER)**: Improves sample efficiency by sampling experiences with non-uniform probability, heavily weighing transitions with high Temporal-Difference (TD) errors.
-
-
-* 
-**N-Step Returns**: Spreads the states influencing the rewards across the timeline, significantly improving credit assignment in sparse-reward environments.
-
-
-* 
-**Noisy Networks**: Replaces traditional $\epsilon$-greedy strategies by injecting learned parameter noise into the network's output layers for dynamic exploration.
-
-
-* 
-**Dueling Networks**: Decomposes Q-values into a state value function and an advantage function, improving learning stability when many actions are equally valuable.
-
-
+* **Double DQN (DDQN)**: Reduces the overestimation bias inherent in standard Q-learning by decoupling the action selection and evaluation steps.
+* **Prioritized Experience Replay (PER)**: Improves sample efficiency by sampling experiences with non-uniform probability, heavily weighing transitions with high Temporal-Difference (TD) errors.
+* **N-Step Returns**: Spreads the states influencing the rewards across the timeline, significantly improving credit assignment in sparse-reward environments.
+* **Noisy Networks**: Replaces traditional ε-greedy strategies by injecting learned parameter noise into the network's output layers for dynamic exploration.
+* **Dueling Networks**: Decomposes Q-values into a state value function and an advantage function, improving learning stability when many actions are equally valuable.
 
 ### Spiking Neural Networks (SNN Integration)
-
-* 
-**Neuromorphic Efficiency**: Simulates the brain's event-driven processing, activating computation only when spikes occur, which drastically reduces theoretical energy usage.
-
-
-* 
-**Leaky Integrate-and-Fire (LIF) Neurons**: Replaces standard ReLU activations with biologically inspired neurons that accumulate membrane potential over time and fire discrete spikes upon crossing a threshold.
-
-
-* 
-**Poisson Rate Coding**: Encodes continuous input frames (pixels) into sparse spike trains, where the probability of a spike is proportional to the pixel intensity.
-
-
-* 
-**ANN-to-SNN Conversion**: Utilizes a robust direct weight-transfer methodology, bypassing the instability of Surrogate Gradients and Spike-Timing Dependent Plasticity (STDP) in deep RL environments.
-
-
+* **Neuromorphic Efficiency**: Simulates the brain's event-driven processing, activating computation only when spikes occur, which drastically reduces theoretical energy usage.
+* **Leaky Integrate-and-Fire (LIF) Neurons**: Replaces standard ReLU activations with biologically inspired neurons that accumulate membrane potential over time and fire discrete spikes upon crossing a threshold.
+* **Poisson Rate Coding**: Encodes continuous input frames (pixels) into sparse spike trains, where the probability of a spike is proportional to the pixel intensity.
+* **ANN-to-SNN Conversion**: Utilizes a robust direct weight-transfer methodology, bypassing the instability of Surrogate Gradients and Spike-Timing Dependent Plasticity (STDP) in deep RL environments.
 
 ---
 
 ## ⚙️ Mathematical Foundations
 
 ### Reinforcement Learning
-
 The fundamental Q-learning update step iteratively reduces the Temporal Difference (TD) error using the Bellman Equation:
 
 $$Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]$$
@@ -67,7 +37,6 @@ To better propagate delayed rewards, we implement N-step returns:
 $$G_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k r_{t+k+1} + \gamma^n V(s_{t+n})$$
 
 ### LIF Neuron Dynamics
-
 In the SNN, the membrane potential $v(t)$ of each LIF neuron is governed by the following differential equation:
 
 $$\tau \frac{dv(t)}{dt} = -(v(t) - v_{rest}) + \sum_{i} W_i Input_i$$
@@ -101,9 +70,6 @@ When $v(t) \ge v_{thresh}$, the neuron emits a binary spike and the potential re
     └── weights/                            # Stores binary and greyscale model weights
 
 ```
-
----
-
 ## 🚀 Getting Started
 
 ### 1. Clone Repository
