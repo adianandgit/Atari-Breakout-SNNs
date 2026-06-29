@@ -1,71 +1,139 @@
-# Atari Breakout using Deep Reinforcement Learning
+# Neuromorphic Deep RL: Atari Breakout via SNNs & Rainbow DQN
 
-This project implements an advanced Deep Q-Network (DQN) agent to learn and play the Atari Breakout game using reinforcement learning techniques. The agent is trained using a combination of:
+This project explores the integration of Spiking Neural Networks (SNNs) with advanced Deep Reinforcement Learning (RL). It implements a robust Deep Q-Network (DQN) agent to master the Atari Breakout environment, and subsequently converts this trained Artificial Neural Network (ANN) into an energy-efficient Spiking Neural Network (SNN).
 
-* **Double DQN**
-* **Prioritized Experience Replay (PER)**
-* **N-step returns**
-
-The project also contains the following parts
-* **Noisy Networks**
-* **Dueling Networks**
+By bridging state-of-the-art RL techniques with neuromorphic principles, this repository studies performance trade-offs, computational efficiency, and the robustness of replacing dense matrix operations with sparse, event-driven spike communications.
 
 ---
 
-## Algorithm Highlights
+## 🚀 Algorithm Highlights
 
-* **Double DQN**: Reduces overestimation bias by decoupling action selection from evaluation.
-* **Prioritized Experience Replay**: Samples important transitions more frequently for faster and stable learning.
-* **N-Step Returns**: Helps with reward propagation and stabilizes learning for delayed rewards.
-* **Noisy Networks**: Replaces ε-greedy with parametric exploration using noise layers.
-* **Duelinng Networks**: Breaks the q values into 2 parts, i.e. the value + advantage of being in that state.
+This agent builds upon Vanilla DQN by incorporating several components of the "Rainbow" DQN architecture, alongside a complete neuromorphic conversion pipeline.
+
+### Deep Reinforcement Learning (ANN)
+
+* 
+**Double DQN (DDQN)**: Reduces the overestimation bias inherent in standard Q-learning by decoupling the action selection and evaluation steps.
+
+
+* 
+**Prioritized Experience Replay (PER)**: Improves sample efficiency by sampling experiences with non-uniform probability, heavily weighing transitions with high Temporal-Difference (TD) errors.
+
+
+* 
+**N-Step Returns**: Spreads the states influencing the rewards across the timeline, significantly improving credit assignment in sparse-reward environments.
+
+
+* 
+**Noisy Networks**: Replaces traditional $\epsilon$-greedy strategies by injecting learned parameter noise into the network's output layers for dynamic exploration.
+
+
+* 
+**Dueling Networks**: Decomposes Q-values into a state value function and an advantage function, improving learning stability when many actions are equally valuable.
+
+
+
+### Spiking Neural Networks (SNN Integration)
+
+* 
+**Neuromorphic Efficiency**: Simulates the brain's event-driven processing, activating computation only when spikes occur, which drastically reduces theoretical energy usage.
+
+
+* 
+**Leaky Integrate-and-Fire (LIF) Neurons**: Replaces standard ReLU activations with biologically inspired neurons that accumulate membrane potential over time and fire discrete spikes upon crossing a threshold.
+
+
+* 
+**Poisson Rate Coding**: Encodes continuous input frames (pixels) into sparse spike trains, where the probability of a spike is proportional to the pixel intensity.
+
+
+* 
+**ANN-to-SNN Conversion**: Utilizes a robust direct weight-transfer methodology, bypassing the instability of Surrogate Gradients and Spike-Timing Dependent Plasticity (STDP) in deep RL environments.
+
+
 
 ---
 
-## Project Structure
+## ⚙️ Mathematical Foundations
+
+### Reinforcement Learning
+
+The fundamental Q-learning update step iteratively reduces the Temporal Difference (TD) error using the Bellman Equation:
+
+$$Q(s,a) \leftarrow Q(s,a) + \alpha \left[ r + \gamma \max_{a'} Q(s',a') - Q(s,a) \right]$$
+
+To better propagate delayed rewards, we implement N-step returns:
+
+$$G_t^{(n)} = \sum_{k=0}^{n-1} \gamma^k r_{t+k+1} + \gamma^n V(s_{t+n})$$
+
+### LIF Neuron Dynamics
+
+In the SNN, the membrane potential $v(t)$ of each LIF neuron is governed by the following differential equation:
+
+$$\tau \frac{dv(t)}{dt} = -(v(t) - v_{rest}) + \sum_{i} W_i Input_i$$
+
+When $v(t) \ge v_{thresh}$, the neuron emits a binary spike and the potential resets.
+
+---
+
+## 📂 Project Structure
+
+```text
+.
+├── Agent_Implementation.py                 # Core agent logic and actions
+├── Atari_Environment.py                    # Setup and wrapping of the OpenAI Gym environment
+├── config.py                               # Hyperparameter definitions
+├── DQN_Architecture.py                     # Standard and Double DQN architectures
+├── Image_Processing_and_Frame_Stacking.py  # Visual preprocessing for 84x84 stacked frames
+├── Main.py                                 # Main training loop for ANN
+├── NOISY_Dueling_DQN.py                    # Advanced network with noise and dueling streams
+├── PER.py                                  # Prioritized Experience Replay buffer
+├── Test.py                                 # Evaluation and rendering of the trained model
+├── training_function.py                    # Optimization and loss calculation steps
+├── Visualisation_and_plotting.py           # Generation of training metric graphs
+└── Playing-Atari-with-SNNs-main/           # Dedicated directory for SNN conversion
+    ├── Agent.py
+    ├── Architectures.py
+    ├── Environment.py
+    ├── Neuron.py                           # Implementation of LIF Neurons
+    ├── Train.py
+    ├── Test.py
+    └── weights/                            # Stores binary and greyscale model weights
 
 ```
-├── DQN_Architecture.py                   
-├── PER.py                               
-├── Agent_Implementation.py         
-├── Atari_Environment.py                
-├── Image_Processing_and_Frame_Stacking.py 
-├── training_function.py
-├── Visualisation_and_plotting.py           
-├── Main.py                                
-├── Test.py                           
-├── config.py 
-├── NOISY_Dueling_DQN.py                               
-└── README.md
-```
 
 ---
 
-## Getting Started
+## 🚀 Getting Started
 
-### 1. Clone Respository
+### 1. Clone Repository
 
-```git
+```bash
 git clone "https://github.com/vishesh-kumar-singh/Atari-Breakout-DoubleDQN.git"
+
 ```
 
 ### 2. Install Dependencies
-Create a seperate environment and in that environment run
+
+Create a separate virtual environment, activate it, and run:
 
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
+
 ```
 
-### 3. Run the Model
+### 3. Run the Pre-trained Model
+
 ```bash
 python Test.py
+
 ```
 
 ---
 
-## Configuration
+## 📊 Configuration
 
-Edit `config.py` to tune hyperparameters like:
+Edit `config.py` to tune the hyperparameters for the DQN training phase:
 
 ```python
 config = {
@@ -79,73 +147,89 @@ config = {
     "target_update_freq": 1000,
     "initial_replay_size": 5000,
 }
+
 ```
+
 ---
-## Training Methods and Results
 
-* Model had initialy been trained using Doble-Deep Q Network for 2000 episode, which resulted average of last 50 scores to be of 81.60
-* After this, N-step Learning method was applied.
-* Instead of training from scratch, the neural network was initialized with the old model weights.
-* This gave a better starting point for the network than random initialisation.
-* After training for 1500 episodes, model reached an average score of 169 for last 50 training episodes.
+## 📈 Training Methods and Results
+
+### ANN Training & Fine-Tuning
+
+* The model was initially trained using a Double-Deep Q Network for 2000 episodes, resulting in a trailing 50-episode average score of **81.60**.
+* N-step Learning was subsequently introduced. Instead of training from scratch, the neural network was initialized with the previous model's weights to provide a strong starting baseline.
+* After 1500 additional episodes of fine-tuning, the model reached an average score of **169** over the final 50 training episodes, with a peak score of **290** (far outperforming the human baseline of 32).
 
 
-The agent can be simply trained by:
+
+To fine-tune the existing agent:
 
 ```bash
 python Main.py
-```
-But this logic **trains the existing model** over more episodes. That is to fine-tune, because the current logic was used to retrain the model for N-step Learning<br>
 
-**To train the model from scratch**. Remove lines 12 and 13 from Main.py then run
-
-```bash
-python Main.py
 ```
 
-### 3. Test the Trained Model
+*(Note: To train entirely from scratch, remove lines 12 and 13 from `Main.py` prior to running the above command).*
 
-```bash
-python Test.py
-```
+### ANN-to-SNN Conversion Methodology
+
+Because direct SNN training using Surrogate Gradients proved highly unstable and computationally expensive for deep RL (e.g., 25 steps taking ~15 minutes) , this project utilizes a direct **Weight Transfer** approach:
+
+1. 
+**Transfer:** Weights from the trained ANN are directly copied into the SNN architecture.
+
+
+2. 
+**Scaling:** To compensate for reduced spiking activity in deeper convolutional layers, layer-wise scaling is applied (e.g., Layer 1 scaled by 20x, Layer 2 by 100x).
+
+
+3. 
+**Inference:** The network interprets Poisson-encoded input frames, and the action layer neuron with the highest spike count over a simulation window is selected as the output.
+
+
+
+**SNN Results:** The converted SNN successfully avoided complex gradient computations, acting as an efficient real-time simulation model. Evaluation histograms indicate that the SNN achieved a mean reward distribution of **1.13**, compared to the baseline ANN's **0.63** during the same testing timeframe.
 
 ---
-## Training Overview
-- Reward Distribution while Second Training Round:
-![Score Distribution](finetuned_results_overview.png)
-- Rewards, Mean Score, Loss in training Process
-![Score Distribution](fine_tuned_results.png)
----
-## Using Noisy Nets and Dueling Networks
 
-Noisy Nets and Dueling networks can further enhance the model performance, but For using Noisy nets and Double DQN you need to replace line 70-85 in Agent_Implementation.py with
-```
+## 🛠️ Using Noisy Nets and Dueling Networks
+
+Noisy Nets and Dueling networks can further enhance model exploration and state-value estimation. To use Noisy Nets with the Double DQN, you need to modify the action selection logic.
+
+Replace lines 70-85 in `Agent_Implementation.py` with:
+
+```python
         state_tensor = torch.tensor(state, dtype=torch.float32).unsqueeze(0)
         state_tensor = state_tensor.to(self.policy_net.device)
         # Get Q-values from the policy network and select action with max Q-value.
         with torch.no_grad():
             q_values = self.policy_net(state_tensor)
         return q_values.argmax().item()
+
 ```
-and add the following to line 130 in Agent_Implementation.py
-```
+
+Next, add the noise reset function inside your environment stepping/loop around line 130 in `Agent_Implementation.py`:
+
+```python
         policy_net.reset_noise()
+
 ```
----
-
-## Acknowledgements
-
-- <a href=https://arxiv.org/pdf/1312.5602>Playing Atari with Deep Reinforcement Learning</a>
-- <a href=https://arxiv.org/pdf/1509.06461>Deep Reinforcement Learning with Double Q-learning</a>
-- <a href=https://arxiv.org/pdf/1511.05952>Prioritized Experience Replay</a>
-- Reinforcement Learning: An Introduction (Sutton and Barto) for N-step Learning
-- <a href=https://arxiv.org/pdf/1511.06581>Dueling Network Architectures for Deep Reinforcement Learning</a>
-- <a href=https://arxiv.org/pdf/1706.10295>Noisy Networks for Exploration</a>
 
 ---
 
-## License
+## 👥 Acknowledgements
+
+This architecture heavily relies on foundational research in the Deep RL and Neuromorphic spaces:
+
+* [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/pdf/1312.5602)
+* [Deep Reinforcement Learning with Double Q-learning](https://arxiv.org/pdf/1509.06461)
+* [Prioritized Experience Replay](https://arxiv.org/pdf/1511.05952)
+* Reinforcement Learning: An Introduction (Sutton and Barto) for N-step Learning
+* [Dueling Network Architectures for Deep Reinforcement Learning](https://arxiv.org/pdf/1511.06581)
+* [Noisy Networks for Exploration](https://arxiv.org/pdf/1706.10295)
+
+---
+
+## 📜 License
 
 This project is licensed under the MIT License. See `LICENSE` for details.
-
----
